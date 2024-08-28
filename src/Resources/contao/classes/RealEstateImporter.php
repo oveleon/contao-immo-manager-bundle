@@ -1104,11 +1104,13 @@ class RealEstateImporter extends \BackendModule
     public function getFieldData($field, $group)
     {
         $attr = false;
+        $attr_field = false;
         $attr_pos = strrpos($field, '@');
 
         if ($attr_pos !== false)
         {
-            $attr = substr($field, $attr_pos + 1);
+            $attr = substr($field, $attr_pos + 1, $attr_pos + 2);
+            $attr_field = strrpos($field, $attr_pos + 2, -1);
             $field = substr($field, 0, $attr_pos);
         }
 
@@ -1150,34 +1152,21 @@ class RealEstateImporter extends \BackendModule
                             $results[$i] = serialize($tmp);
                         }
                         break;
-                    case '[1]':
-                        // Returns the first child nodes name.
-                        $index = 0;
-                        foreach ($xmlNode->children() as $c) {
-                            if ($index === 0) {
-                                $results[$i] = $c->getName();
+                    case '[':
+                        if(is_numeric($attr_field)) {
+                            // Returns the first child nodes name.
+                            $index = 0;
+                            $attr_field = intval($attr_field) - 1;
+                            foreach ($xmlNode->children() as $c) {
+                                if ($index === $attr_field) {
+                                    $results[$i] = $c->getName();
+                                }
+                                $index++;
                             }
-                            $index++;
-                        }
-                        break;
-                    case '[2]':
-                        // Returns the first child nodes name.
-                        $index = 0;
-                        foreach ($xmlNode->children() as $c) {
-                            if ($index === 1) {
-                                $results[$i] = $c->getName();
-                            }
-                            $index++;
-                        }
-                        break;
-                    case '[3]':
-                        // Returns the first child nodes name.
-                        $index = 0;
-                        foreach ($xmlNode->children() as $c) {
-                            if ($index === 2) {
-                                $results[$i] = $c->getName();
-                            }
-                            $index++;
+                        } else {
+                            // Returns the value of an multiple XML element.
+                            if(current($attributes)['feldname'] == $attr_field)
+                                $results[0] = $xmlNode->__toString();
                         }
                         break;
                     default:
