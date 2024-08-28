@@ -1109,8 +1109,8 @@ class RealEstateImporter extends \BackendModule
 
         if ($attr_pos !== false)
         {
-            $attr = substr($field, $attr_pos + 1, $attr_pos + 2);
-            $attr_field = strrpos($field, $attr_pos + 2, -1);
+            $attr = substr($field, $attr_pos + 1, 1);
+            $attr_field = substr($field, $attr_pos + 2, -1);
             $field = substr($field, 0, $attr_pos);
         }
 
@@ -1171,6 +1171,7 @@ class RealEstateImporter extends \BackendModule
                         break;
                     default:
                         // Returns the value of an XML element.
+                        $attr = substr($field, $attr_pos + 1);
                         $results[$i] = current($attributes)[$attr] ?? null;
                         break;
                 }
