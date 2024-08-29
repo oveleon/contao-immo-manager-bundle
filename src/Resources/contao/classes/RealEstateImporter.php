@@ -1165,7 +1165,7 @@ class RealEstateImporter extends \BackendModule
                             }
                         } else {
                             // Returns the value of an multiple XML element.
-                            if(current($attributes)['feldname'] == $attr_field)
+                            if(array_key_first(current($attributes)) == $attr_field)
                                 $results[0] = $xmlNode->__toString();
                         }
                         break;
