@@ -871,7 +871,7 @@ class tl_real_estate_type extends Contao\Backend
         }
 
         // Trigger the onsubmit_callback
-        if (is_array($GLOBALS['TL_DCA']['tl_real_estate_type']['config']['onsubmit_callback' ?? null]))
+        if (is_array($GLOBALS['TL_DCA']['tl_real_estate_type']['config']['onsubmit_callback'] ?? null))
         {
             foreach ($GLOBALS['TL_DCA']['tl_real_estate_type']['config']['onsubmit_callback'] as $callback)
             {
