@@ -796,11 +796,15 @@ class RealEstateImporter extends \BackendModule
                         continue;
                     }
 
-                    // Delete real estate
-                    $this->deleteRealEstateImages($objRealEstate, $objProvider);
-                    $objRealEstate->delete();
-                    $this->addLog('Real estate was deleted: ' . $realEstateRecords[$i][$this->objInterface->uniqueField], 2, 'success');
-                    continue;
+                    // Do not delete if the real estate does not exist
+                    if (null !== $objRealEstate)
+                    {
+                        // Delete real estate
+                        $this->deleteRealEstateImages($objRealEstate, $objProvider);
+                        $objRealEstate->delete();
+                        $this->addLog('Real estate was deleted: ' . $realEstateRecords[$i][$this->objInterface->uniqueField], 2, 'success');
+                        continue;
+                    }
                 }else{
                     $this->addLog('Real estate was updated: ' . $realEstateRecords[$i][$this->objInterface->uniqueField], 2, 'success');
                 }
@@ -1471,6 +1475,11 @@ class RealEstateImporter extends \BackendModule
 
     protected function deleteRealEstateImages($objRealEstate, $objProvider)
     {
+        if (null === $objRealEstate || null === $objProvider)
+        {
+            return;
+        }
+
         $deleteFolder = $this->objFilesFolder->path . '/' . $objProvider->anbieternr . '/' . $objRealEstate->{$this->objInterface->uniqueField};
 
         Files::getInstance()->rrdir($deleteFolder);
